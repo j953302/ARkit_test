@@ -9,67 +9,105 @@
 import UIKit
 import SceneKit
 import ARKit
+import AWSS3  // 導入ＡＷＳ包
+import AWSCore
+import AWSCognito
 
 class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Configure AWS Cognito Credentials
         
-        // Set the view's delegate
-        sceneView.delegate = self
         
-        // Show statistics such as fps and timing information
-        sceneView.showsStatistics = true
+        print("start")
         
-        // Create a new scene
-        let scene = SCNScene(named: "art.scnassets/ship.scn")!
+        let originalDict = ["cup1":"apple", "cup2":"banana", "3":"orange"]
+        let name = "cup123"
         
-        // Set the scene to the view
-        sceneView.scene = scene
+        if (originalDict["1"] != nil){
+            print(originalDict["1"])
+        }
+        if (originalDict["4"] != nil){
+            print(originalDict["4"])
+        }
+        
+        if(name.contains("cup")){
+            print("yes")
+        }
+
+        print("done")
     }
+        
+        /*
+        
+        print("start")
+        let queue1 = DispatchQueue(label: "com.appcoda.myqueue" ,qos: DispatchQoS.userInteractive)
+        let queue2 = DispatchQueue(label: "com.appcoda.myqueue")
+        
+        let accessKey = "AKIA37LQEHK2R7UNMHM2"
+        let secretKey = "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"
+        
+        let credentialsProvider = AWSStaticCredentialsProvider(accessKey: accessKey, secretKey: secretKey)
+        let configuration = AWSServiceConfiguration(region: AWSRegionType.APNortheast1, credentialsProvider: credentialsProvider)
+        AWSServiceManager.default().defaultServiceConfiguration = configuration
+        
+        
+        AWSS3.register(with: configuration!, forKey: "defaultKey")
+        let s3 = AWSS3.s3(forKey: "defaultKey")
+        
+        let listRequest: AWSS3ListObjectsRequest = AWSS3ListObjectsRequest()
+        
+        queue1.async {
+            listRequest.bucket = "howtest.bk"
+            listRequest.prefix = "GTtest_arkit_model"
+            
+        }
+        
+        //GTtest_arkit_model
+        
+        
+        queue2.async{
+        
+        s3.listObjects(listRequest).continueWith { (task) -> AnyObject? in
+            if let error = task.error {
+                print("listObjects failed: [\(error)]")
+            }
+            else{
+                print("listObjects succeeded")
+                for object in (task.result?.contents)! {
+                    
+                    print("Object key = \(object.key!)")
+                    print(object.key!.contains("cup.scn"))
+                    
+                }
+            }
+            /*
+            for object in (task.result?.contents)! {
+                
+                print("Object key = \(object.key!)")
+            }
+ */
+            
+            return nil
+        }
+            
+        }
+        
+        print("done")
+    }
+ */
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        // Create a session configuration
-        let configuration = ARWorldTrackingConfiguration()
-
-        // Run the view's session
-        sceneView.session.run(configuration)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        // Pause the view's session
-        sceneView.session.pause()
     }
 
-    // MARK: - ARSCNViewDelegate
-    
-/*
-    // Override to create and configure nodes for anchors added to the view's session.
-    func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
-        let node = SCNNode()
-     
-        return node
-    }
-*/
-    
-    func session(_ session: ARSession, didFailWithError error: Error) {
-        // Present an error message to the user
-        
-    }
-    
-    func sessionWasInterrupted(_ session: ARSession) {
-        // Inform the user that the session has been interrupted, for example, by presenting an overlay
-        
-    }
-    
-    func sessionInterruptionEnded(_ session: ARSession) {
-        // Reset tracking and/or remove existing anchors if consistent tracking is required
-        
-    }
 }
+
